@@ -1,0 +1,70 @@
+body {
+    font-family: 'Poppins', sans-serif; /* Default font */
+    background: linear-gradient(to right, #6a11cb, #2575fc); /* Purple to Blue gradient */
+    text-align: center;
+    margin: 0;
+    padding: 40px;
+}
+
+h1 {
+    color: white;
+    font-size: 36px;
+    margin-bottom: 30px;
+    font-weight: 800; /* Extra bold */
+}
+
+#text {
+    display: none;
+    font-size: 32px;
+    margin: 20px 0;
+    color: white; /* Changed to white for better contrast */
+    font-weight: bold;
+}
+
+button {
+    font-family: 'Poppins', sans-serif; /* Ensure buttons use Poppins font */
+    background: linear-gradient(90deg, #ff416c, #ff4b2b); /* Gradient button */
+    color: white;
+    border: none;
+    border-radius: 25px; /* Rounded buttons */
+    padding: 12px 30px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    margin: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+}
+
+button:hover {
+    transform: translateY(-5px) scale(1.05); /* Lift and scale effect */
+    background: linear-gradient(90deg, #ff4b2b, #ff416c); /* Reverse gradient on hover */
+}
+
+input {
+    padding: 12px;
+    font-size: 16px;
+    width: 80%;
+    border: 2px solid #ffffff; /* White border */
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background-color: rgba(255, 255, 255, 0.8); /* Slightly transparent background */
+}
+
+#history {
+    margin-top: 30px;
+    text-align: left;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: rgba(255, 255, 255, 0.9); /* Card background with transparency */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Shadow effect */
+    padding: 20px;
+}
+
+#clearHistoryButton {
+    font-family: 'Poppins', sans-serif; /* Ensure clear history button uses Poppins font */
+    background: linear-gradient(90deg, #ff416c, #ff4b2b); /* Gradient for delete button */
+    color: white;
+    border-radius: 25px;
+}
