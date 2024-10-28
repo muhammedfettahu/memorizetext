@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memorize Text</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800&family=Noto+Naskh+Arabic:wght@600&display=swap" rel="stylesheet"> <!-- Include Noto Naskh Arabic -->
+    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS -->
+</head>
+<body>
+
+    <h1 id="title">Memorize Text</h1>
+    <input type="text" id="textInput" placeholder="Enter your text here..." />
+    <button id="startButton">Start</button>
+    <div id="text"></div>
+    <button id="revealButton" style="display: none;">Reveal Next Word</button>
+    
+    <button id="languageToggle">Switch to Arabic</button>
+    <button id="moreButton" style="display: none;">Do you want to memorize more?</button>
+
+    <div id="history">
+        <h2>History</h2>
+        <ul id="historyList"></ul>
+        <button id="clearHistoryButton">Clear History</button>
+    </div>
+
+    <script>
+        let currentWordIndex = 0;
+        let words = [];
+        const historyList = document.getElementById('historyList');
+        const startButton = document.getElementById('startButton');
+        const revealButton = document.getElementById('revealButton');
+        const textDiv = document.getElementById('text');
+        const textInput = document.getElementById('textInput');
+        const languageToggle = document.getElementById('languageToggle');
+        const moreButton = document.getElementById('moreButton');
+        const clearHistoryButton = document.getElementById('clearHistoryButton');
+
+        // Load history from localStorage on page load
+        document.addEventListener('DOMContentLoaded', loadHistory);
+
+        startButton.addEventListener('click', startMemorization);
+        textInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                startMemorization();
+            }
+        });
+
+        revealButton.addEventListener('click', revealNextWord);
+        document.addEventListener('keypress', (e) => {
+            if (e.code === 'Space') {
+                revealNextWord();
+            } else if (e.code === 'Enter' && moreButton.style.display !== 'none') {
+                moreButton.click();
+            }
+        });
+
+        function startMemorization() {
+            const text = textInput.value.trim();
+            if (text) {
+                words = text.split(' ');
+                currentWordIndex = 0;
+                textDiv.innerHTML = words.map(word => `<span style="display:none;">${word}</span>`).join(' ');
+                textDiv.style.display = 'block';
+                revealButton.style.display = 'inline-block';
+                startButton.style.display = 'none';
+                textInput.value = ''; // Clear input after starting
+                revealButton.disabled = false; // Enable the reveal button
+                moreButton.style.display = 'none'; // Hide the "more" button initially
+                
+                // Set font for Arabic text
+                setTextFont();
+            } else {
+                alert('Please enter some text.');
+            }
+        }
+
+        function setTextFont() {
+            const isArabic = /[\u0600-\u06FF]/.test(words.join(' ')); // Check if the input contains Arabic characters
+            textDiv.style.fontFamily = isArabic ? '"Noto Naskh Arabic", sans-serif' : '"Poppins", sans-serif';
+        }
+
+        function revealNextWord() {
+            if (currentWordIndex < words.length) {
+                const wordSpans = textDiv.querySelectorAll('span');
+                wordSpans[currentWordIndex].style.display = 'inline';
+                currentWordIndex++;
+
+                // Show the "more" button if it's the last word
+                if (currentWordIndex === words.length) {
+                    revealButton.style.display = 'none'; // Hide reveal button
+                    moreButton.style.display = 'inline-block'; // Show "Do you want to memorize more?" button
+                }
+            }
+        }
+
+        moreButton.addEventListener('click', () => {
+            const completedText = words.join(' ');
+            saveToHistory(completedText);
+            resetForNewText();
+        });
+
+        function resetForNewText() {
+            moreButton.style.display = 'none'; // Hide "more" button for new text
+            startButton.style.display = 'inline-block'; // Show start button for new text
+            textDiv.innerHTML = ''; // Clear previous text display
+        }
+
+        function saveToHistory(text) {
+            const history = JSON.parse(localStorage.getItem('history')) || [];
+            history.push(text);
+            localStorage.setItem('history', JSON.stringify(history));
+            loadHistory();
+        }
+
+        function loadHistory() {
+            const history = JSON.parse(localStorage.getItem('history')) || [];
+            historyList.innerHTML = ''; // Clear existing history
+            history.forEach((item, index) => {
+                const historyItem = document.createElement('li');
+                historyItem.textContent = `${index + 1}. ${item}`;
+                historyList.appendChild(historyItem);
+            });
+        }
+
+        clearHistoryButton.addEventListener('click', clearHistory);
+
+        function clearHistory() {
+            if (confirm('Are you sure you want to delete the history?')) {
+                localStorage.removeItem('history'); // Clear the history from localStorage
+                loadHistory(); // Refresh the displayed history
+            }
+        }
+
+        languageToggle.addEventListener('click', () => {
+            const isArabic = document.documentElement.lang === 'ar';
+            document.documentElement.lang = isArabic ? 'en' : 'ar';
+            document.getElementById('title').innerText = isArabic ? 'تذكر النص' : 'Memorize Text';
+            startButton.innerText = isArabic ? 'ابدأ' : 'Start';
+            revealButton.innerText = isArabic ? 'كشف الكلمة التالية' : 'Reveal Next Word';
+            textInput.placeholder = isArabic ? 'أدخل النص هنا...' : 'Enter your text here...';
+            languageToggle.innerText = isArabic ? 'Switch to English' : 'Switch to Arabic';
+        });
+    </script>
+
+</body>
+</html>
