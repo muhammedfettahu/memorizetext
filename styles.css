@@ -68,3 +68,10 @@ input {
     color: white;
     border-radius: 25px;
 }
+
+/* Styles for Arabic text */
+.arabic {
+    font-family: 'Noto Naskh Arabic', sans-serif; /* Arabic font */
+    font-weight: 600; /* SemiBold */
+    color: white; /* Ensure visibility on gradient background */
+}
