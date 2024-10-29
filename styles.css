@@ -51,15 +51,15 @@ input {
 }
 
 #history {
-    margin-top: 30px;
+    margin: 30px auto; /* Center the history section */
     text-align: left;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    max-width: 600px; /* Maximum width for larger screens */
+    width: 100%; /* Use full width on mobile */
     background-color: rgba(255, 255, 255, 0.9); /* Card background with transparency */
     border-radius: 10px; /* Rounded corners */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Shadow effect */
     padding: 20px;
+    box-sizing: border-box; /* Include padding in width calculations */
 }
 
 #clearHistoryButton {
@@ -74,4 +74,30 @@ input {
     font-family: 'Noto Naskh Arabic', sans-serif; /* Arabic font */
     font-weight: 600; /* SemiBold */
     color: white; /* Ensure visibility on gradient background */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 28px; /* Smaller font size on mobile */
+    }
+
+    #text {
+        font-size: 24px; /* Smaller font size for text */
+    }
+
+    button {
+        font-size: 16px; /* Smaller button text */
+        padding: 10px 20px; /* Adjust button size */
+    }
+
+    input {
+        width: 90%; /* Wider input on mobile */
+    }
+
+    #history {
+        padding: 15px; /* Less padding on mobile */
+        width: 95%; /* Ensure it uses more width for centering */
+        margin: 30px auto; /* Center it horizontally */
+    }
 }
