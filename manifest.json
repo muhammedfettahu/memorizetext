@@ -1,6 +1,6 @@
 {
-    "name": "Memorize Text",
-    "short_name": "Memorize",
+    "name": "Memorizuesi",
+    "short_name": "Memorizuesi",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#ffffff",
@@ -18,3 +18,4 @@
         }
     ]
 }
+
