@@ -10,8 +10,29 @@
     <!-- Add to home screen meta tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <link rel="apple-touch-icon" href="icon.png"> <!-- Add your icon here -->
-    <link rel="manifest" href="manifest.json"> <!-- Link to manifest file -->
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        /* Add styles for Arabic text */
+        .arabic {
+            font-family: 'Noto Naskh Arabic', sans-serif;
+            font-weight: 600; /* SemiBold */
+        }
+        /* Additional styles */
+        #history {
+            width: 100%; /* Full width for history section */
+            text-align: center; /* Center align title and button */
+            margin-top: 20px; /* Spacing above history */
+        }
+        #historyList {
+            text-align: left; /* Left align history items */
+            list-style: none; /* Remove bullet points */
+            padding: 0; /* Remove padding */
+        }
+        #clearHistoryButton {
+            margin-top: 10px; /* Space above button */
+        }
+    </style>
 </head>
 <body>
 
@@ -20,7 +41,7 @@
     <button id="FilloButton">Fillo</button>
     <div id="text"></div>
     <button id="revealButton" style="display: none;">Shfaq fjalën e rradhës</button>
-    <button id="stopButton" style="display: none;">Ndalo memorizimin?</button> <!-- Initial text in Albanian -->
+    <button id="stopButton" style="display: none;">Ndalo memorizimin?</button>
     
     <button id="languageToggle">Ndrysho gjuhën në Arabisht</button>
     <button id="moreButton" style="display: none;">A dëshironë të memorizoni më tepër?</button>
@@ -37,7 +58,7 @@
         const historyList = document.getElementById('historyList');
         const FilloButton = document.getElementById('FilloButton');
         const revealButton = document.getElementById('revealButton');
-        const stopButton = document.getElementById('stopButton'); // Stop button reference
+        const stopButton = document.getElementById('stopButton');
         const textDiv = document.getElementById('text');
         const textInput = document.getElementById('textInput');
         const languageToggle = document.getElementById('languageToggle');
@@ -45,7 +66,29 @@
         const clearHistoryButton = document.getElementById('clearHistoryButton');
 
         // Load history from localStorage on page load
-        document.addEventListener('DOMContentLoaded', loadHistory);
+        document.addEventListener('DOMContentLoaded', () => {
+            loadHistory();
+            setInitialLanguage(); // Set initial language state
+        });
+
+        function setInitialLanguage() {
+            const isArabic = document.documentElement.lang === 'ar';
+            // Set initial text based on current language
+            document.getElementById('title').innerText = isArabic ? 'تذكر النص' : 'Memorizuesi';
+            FilloButton.innerText = isArabic ? 'ابدأ' : 'Fillo';
+            revealButton.innerText = isArabic ? 'كشف الكلمة التالية' : 'Shfaq fjalën e rradhës';
+            textInput.placeholder = isArabic ? 'أدخل النص هنا...' : 'Shkruaj tekstin tënd këtu...';
+            languageToggle.innerText = isArabic ? 'Ndrysho në Shqip' : 'Ndrysho gjuhën në Arabisht';
+            stopButton.innerText = isArabic ? 'إيقاف التذكر؟' : 'Ndalo memorizimin?';
+            moreButton.innerText = isArabic ? 'هل تريد حفظ المزيد؟' : 'A dëshironë të memorizoni më tepër?';
+            const historyTitle = isArabic ? 'التاريخ' : 'Historia';
+            const clearHistoryText = isArabic ? 'حذف التاريخ' : 'Fshi historinë';
+            document.querySelector('#history h2').innerText = historyTitle;
+            clearHistoryButton.innerText = clearHistoryText;
+
+            // Reload history to update numbering style
+            loadHistory();
+        }
 
         FilloButton.addEventListener('click', FilloMemorization);
         textInput.addEventListener('keypress', (e) => {
@@ -55,7 +98,7 @@
         });
 
         revealButton.addEventListener('click', revealNextWord);
-        stopButton.addEventListener('click', stopMemorization); // Stop button click event
+        stopButton.addEventListener('click', stopMemorization);
         document.addEventListener('keypress', (e) => {
             if (e.code === 'Space') {
                 revealNextWord();
@@ -69,16 +112,15 @@
             if (text) {
                 words = text.split(' ');
                 currentWordIndex = 0;
-                textDiv.innerHTML = words.map(word => `<span style="display:none;">${word}</span>`).join(' ');
+                textDiv.innerHTML = words.map(word => `<span style="display:none;" class="${/[\u0600-\u06FF]/.test(word) ? 'arabic' : ''}">${word}</span>`).join(' ');
                 textDiv.style.display = 'block';
-                revealButton.style.display = 'inline-block'; // Show reveal button
-                stopButton.style.display = 'inline-block'; // Show the Stop button
+                revealButton.style.display = 'inline-block';
+                stopButton.style.display = 'inline-block';
                 FilloButton.style.display = 'none';
-                textInput.value = ''; // Clear input after Filloing
-                revealButton.disabled = false; // Enable the reveal button
-                moreButton.style.display = 'none'; // Hide the "more" button initially
+                textInput.value = '';
+                revealButton.disabled = false;
+                moreButton.style.display = 'none';
                 
-                // Set font for Arabic text
                 setTextFont();
             } else {
                 alert('Please enter some text.');
@@ -86,7 +128,7 @@
         }
 
         function setTextFont() {
-            const isArabic = /[\u0600-\u06FF]/.test(words.join(' ')); // Check if the input contains Arabic characters
+            const isArabic = /[\u0600-\u06FF]/.test(words.join(' '));
             textDiv.style.fontFamily = isArabic ? '"Noto Naskh Arabic", sans-serif' : '"Poppins", sans-serif';
         }
 
@@ -96,11 +138,10 @@
                 wordSpans[currentWordIndex].style.display = 'inline';
                 currentWordIndex++;
 
-                // Hide the reveal button and stop button if it's the last word
                 if (currentWordIndex === words.length) {
-                    revealButton.style.display = 'none'; // Hide reveal button
-                    stopButton.style.display = 'none'; // Hide Stop button
-                    moreButton.style.display = 'inline-block'; // Show "A dëshironë të memorizoni më tepër?" button
+                    revealButton.style.display = 'none';
+                    stopButton.style.display = 'none';
+                    moreButton.style.display = 'inline-block';
                 }
             }
         }
@@ -108,7 +149,7 @@
         function stopMemorization() {
             const revealedWords = words.slice(0, currentWordIndex).join(' ');
             if (revealedWords) {
-                saveToHistory(revealedWords); // Save revealed text to history
+                saveToHistory(revealedWords);
             }
             resetForNewText();
         }
@@ -120,12 +161,12 @@
         });
 
         function resetForNewText() {
-            moreButton.style.display = 'none'; // Hide "more" button for new text
-            FilloButton.style.display = 'inline-block'; // Show Fillo button for new text
-            stopButton.style.display = 'none'; // Hide Stop button for new text
-            revealButton.style.display = 'none'; // Hide Reveal button for new text
-            textDiv.innerHTML = ''; // Clear previous text display
-            currentWordIndex = 0; // Reset current word index
+            moreButton.style.display = 'none';
+            FilloButton.style.display = 'inline-block';
+            stopButton.style.display = 'none';
+            revealButton.style.display = 'none';
+            textDiv.innerHTML = '';
+            currentWordIndex = 0;
         }
 
         function saveToHistory(text) {
@@ -137,43 +178,36 @@
 
         function loadHistory() {
             const history = JSON.parse(localStorage.getItem('history')) || [];
-            historyList.innerHTML = ''; // Clear existing history
+            historyList.innerHTML = '';
+            const isArabic = document.documentElement.lang === 'ar';
+
             history.forEach((item, index) => {
                 const historyItem = document.createElement('li');
-                historyItem.textContent = `${index + 1}. ${item}`;
+                const number = isArabic ? index + 1 : index + 1; // Here, we could convert to Arabic numerals if needed
+                const formattedNumber = isArabic ? convertToArabicNumerals(number) : number;
+                historyItem.textContent = `${formattedNumber}. ${item}`;
                 historyList.appendChild(historyItem);
             });
+        }
+
+        function convertToArabicNumerals(num) {
+            const arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+            return num.toString().split('').map(digit => arabicNumerals[parseInt(digit)]).join('');
         }
 
         clearHistoryButton.addEventListener('click', clearHistory);
 
         function clearHistory() {
             if (confirm('Are you sure you want to delete the history?')) {
-                localStorage.removeItem('history'); // Clear the history from localStorage
-                loadHistory(); // Refresh the displayed history
+                localStorage.removeItem('history');
+                loadHistory();
             }
         }
 
         languageToggle.addEventListener('click', () => {
             const isArabic = document.documentElement.lang === 'ar';
             document.documentElement.lang = isArabic ? 'en' : 'ar';
-            document.getElementById('title').innerText = isArabic ? 'تذكر النص' : 'Memorizuesi';
-            FilloButton.innerText = isArabic ? 'ابدأ' : 'Fillo';
-            revealButton.innerText = isArabic ? 'كشف الكلمة التالية' : 'Shfaq fjalën e rradhës';
-            textInput.placeholder = isArabic ? 'أدخل النص هنا...' : 'Shkruaj tekstin tënd këtu...';
-            languageToggle.innerText = isArabic ? 'Ndrysho në Shqip' : 'Ndrysho gjuhën në Arabisht';
-
-            // Update stop button text based on language
-            stopButton.innerText = isArabic ? 'إيقاف التذكر؟' : 'Ndalo memorizimin?';
-
-            // Update "more" button text based on language
-            moreButton.innerText = isArabic ? 'هل تريد حفظ المزيد؟' : 'A dëshironë të memorizoni më tepër?';
-
-            // Update history section text
-            const historyTitle = isArabic ? 'التاريخ' : 'Historia';
-            const clearHistoryText = isArabic ? 'حذف التاريخ' : 'Fshi historinë';
-            document.querySelector('#history h2').innerText = historyTitle;
-            clearHistoryButton.innerText = clearHistoryText;
+            setInitialLanguage(); // Update text based on new language
         });
     </script>
 
