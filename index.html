@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memorizuesi</title>
+    <link rel="icon" href="icon.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@800&family=Noto+Naskh+Arabic:wght@600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     
@@ -43,8 +44,8 @@
     <button id="revealButton" style="display: none;">Shfaq fjalën e rradhës</button>
     <button id="stopButton" style="display: none;">Ndalo memorizimin?</button>
     
+    <button id="moreButton" style="display: none;">Ruaj tekstin në histori?</button>
     <button id="languageToggle">Ndrysho gjuhën në Arabisht</button>
-    <button id="moreButton" style="display: none;">A dëshironë të memorizoni më tepër?</button>
 
     <div id="history">
         <h2>Historia</h2>
@@ -80,7 +81,7 @@
             textInput.placeholder = isArabic ? 'أدخل النص هنا...' : 'Shkruaj tekstin tënd këtu...';
             languageToggle.innerText = isArabic ? 'Ndrysho në Shqip' : 'Ndrysho gjuhën në Arabisht';
             stopButton.innerText = isArabic ? 'إيقاف التذكر؟' : 'Ndalo memorizimin?';
-            moreButton.innerText = isArabic ? 'هل تريد حفظ المزيد؟' : 'A dëshironë të memorizoni më tepër?';
+            moreButton.innerText = isArabic ? 'هل تريد حفظ النص في لوحة التاريخ؟' : 'Ruaj tekstin në histori?';
             const historyTitle = isArabic ? 'التاريخ' : 'Historia';
             const clearHistoryText = isArabic ? 'حذف التاريخ' : 'Fshi historinë';
             document.querySelector('#history h2').innerText = historyTitle;
